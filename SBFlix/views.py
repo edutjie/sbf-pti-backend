@@ -1,26 +1,23 @@
+from django.db.models import query
 from django.shortcuts import render
 from django.http import HttpResponse
+from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Movie
 from .serializers import MovieSerializer
-from rest_framework import status
+from rest_framework import serializers, status
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter, SearchFilter
+
 
 # Create your views here.
-class MovieList(APIView):
-    def get(self, request):
-        movie = Movie.objects.all()
-        serializers = MovieSerializer(movie, many=True)
-        return Response(serializers.data)
-
-    def post(self, request):
-        book = Movie.objects.create(
-            title = request.data['title'],
-            poster = request.data['poster'],
-            trailer = request.data['trailer'],
-            genre = request.data['genre'],
-            release_year = request.data['release_year'],
-        )
-
-        serializers = MovieSerializer(book)
-        return Response(serializers.data, status=status.HTTP_201_CREATED)
+class MovieListView(ListAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_fields = ['title','genre']
+    ordering_fields = ['title','genre']
+    
+class MovieCreateView(CreateAPIView):
+    serializer_class = MovieSerializer
