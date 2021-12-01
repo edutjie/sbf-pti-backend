@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'SBFlix',
     'rest_framework',
+    "django_filters",
 ]
 
 MIDDLEWARE = [
