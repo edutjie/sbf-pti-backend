@@ -9,6 +9,7 @@ from .serializers import MovieSerializer
 from rest_framework import serializers, status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
+from django.core.exceptions import ValidationError
 
 
 # Create your views here.
@@ -22,3 +23,41 @@ class MovieListView(ListAPIView):
     
 class MovieCreateView(CreateAPIView):
     serializer_class = MovieSerializer
+    Response(status=status.HTTP_201_CREATED)
+    
+class Likes(APIView):
+    def put(self, request, id):
+        try :
+            movie = Movie.objects.get(id=id)
+            movie.likes += 1
+            movie.save()
+        except Movie.DoesNotExist:
+             return Response({
+                "error" : "movie doesn't exist"
+            })
+
+        serializers = MovieSerializer(movie)
+        return Response({
+            "status" : 201,
+            "message" : "liked",
+            "data" : serializers.data
+        }, status=status.HTTP_201_CREATED)
+
+
+class Dislikes(APIView):
+    def put(self, request, id):
+        try :
+            movie = Movie.objects.get(id=id)
+            movie.likes += 1
+            movie.save()
+        except Movie.DoesNotExist:
+             return Response({
+                "error" : "movie doesn't exist"
+            })
+
+        serializers = MovieSerializer(movie)
+        return Response({
+            "status" : 201,
+            "message" : "disliked",
+            "data" : serializers.data
+        }, status=status.HTTP_201_CREATED)
