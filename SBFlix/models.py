@@ -7,4 +7,5 @@ class Movie(models.Model):
     trailer = models.CharField(max_length=200)
     genre = models.CharField(max_length=200)
     release_year = models.IntegerField()
-    
+    likes = models.IntegerField(default=0)
+    dislikes = models.IntegerField(default=0)
