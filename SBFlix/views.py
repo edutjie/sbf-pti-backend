@@ -1,7 +1,7 @@
 from django.db.models import query
 from django.shortcuts import render
 from django.http import HttpResponse
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Movie
@@ -23,7 +23,10 @@ class MovieListView(ListAPIView):
     
 class MovieCreateView(CreateAPIView):
     serializer_class = MovieSerializer
-    Response(status=status.HTTP_201_CREATED)
+    
+class MovieDestroyView(DestroyAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
     
 class Likes(APIView):
     def put(self, request, id):
