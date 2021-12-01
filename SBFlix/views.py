@@ -15,9 +15,10 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 class MovieListView(ListAPIView):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
-    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
     filterset_fields = ['title','genre']
     ordering_fields = ['title','genre']
+    search_fields = ['title']
     
 class MovieCreateView(CreateAPIView):
     serializer_class = MovieSerializer
