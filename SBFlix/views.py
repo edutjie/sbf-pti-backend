@@ -27,12 +27,14 @@ class MovieListView(ListCreateAPIView):
         })
     
     def perform_create(self, serializer):
-        queryset = Movie.objects.filter(title=self.request.data["title"])
-        if queryset.exists():
-            # handle if the movie is already exists
-            raise ValidationError('the movie is already exists')
+        try:
+            queryset = Movie.objects.filter(title=self.request.data["title"])
+            if queryset.exists():
+                # handle if the movie is already exists
+                raise ValidationError('the movie is already exists')
+        except AttributeError:
+            pass
         serializer.save()
-        return Response(serializers.data, status=status.HTTP_201_CREATED)
 
 class MovieFilter(ListAPIView):
     queryset = Movie.objects.all()
@@ -52,6 +54,7 @@ class MovieSearch(ListAPIView):
 class MovieDestroyView(DestroyAPIView):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
+    
     
 class Likes(APIView):
     def put(self, request, id):
